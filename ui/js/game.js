@@ -1,5 +1,5 @@
 window.addEventListener("load", function () {
-    let createNewGame = {method: "POST", url: "https://lms.ithillel.ua/newgame"}
+    let createNewGame = {method: "POST", url: "/newgame"}
     let sendAnswer = {method: "POST", url: "https://lms.ithillel.ua/game"}
     let getAnswers = {method: "GET", url: "https://lms.ithillel.ua/newgame"}
 
