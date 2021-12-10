@@ -1,9 +1,9 @@
 window.addEventListener("load", function () {
     let createNewGame = {method: "POST", url: "/newgame"}
-    let sendAnswer = {method: "POST", url: "https://lms.ithillel.ua/game"}
-    let getAnswers = {method: "GET", url: "https://lms.ithillel.ua/newgame"}
+    let sendAnswer = {method: "POST", url: "/game"}
+    let getAnswers = {method: "GET", url: "/game"}
 
-    function request(options) {
+    function request(options, data) {
         var xhr = new XMLHttpRequest();
         xhr.open(options.method, options.url, true);
         xhr.setRequestHeader("Content-Type", "application/json");
@@ -13,12 +13,17 @@ window.addEventListener("load", function () {
                 console.log("Hi Guys");
             }
         }
-        xhr.send();
+        xhr.send(data);
     }
 
-    console.log("Hello");
     let newGameButton = document.querySelector("#new-game");
     newGameButton.addEventListener("click", function () {
         request(createNewGame);
     });
+
+    let sendAnswerButton = document.querySelector("#answer-button");
+    sendAnswerButton.addEventListener("click", function() {
+        let numberValue = document.querySelector("#answer-field");
+        request(sendAnswer, JSON.stringify({ answer: numberValue.value }));
+    })
 });
