@@ -8,9 +8,12 @@ window.addEventListener("load", function () {
         xhr.open(options.method, options.url, true);
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.onreadystatechange = function () {
-            console.log(xhr.readyState)
-            if (xhr.readyState === 4 && xhr.status === 405) {
-                console.log("Hi Guys");
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                let result = JSON.parse(xhr.responseText)
+                let textArea = document.querySelector("#answers");
+                let resultArea = document.querySelector("#result");
+                textArea.value = result.data.answers;
+                resultArea.value = result.data.result;
             }
         }
         xhr.send(data);
@@ -25,5 +28,6 @@ window.addEventListener("load", function () {
     sendAnswerButton.addEventListener("click", function() {
         let numberValue = document.querySelector("#answer-field");
         request(sendAnswer, JSON.stringify({ answer: numberValue.value }));
+        numberValue.value = ''
     })
 });

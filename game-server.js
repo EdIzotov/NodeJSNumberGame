@@ -21,9 +21,6 @@ function readFile(fileName, res) {
 }
 
 const requestListener = function (req, res) {
-    console.log("********************************************");
-    console.log(req.method + ' ' + req.url);
-    console.log("********************************************");
     if (req.method == 'GET' && (req.url == '/' || req.url == '/index.html')) {
         readFile('./ui/index.html', res);
     } else if (req.method == 'GET' && req.url == '/js/game.js') {
@@ -31,9 +28,8 @@ const requestListener = function (req, res) {
     } else if (req.method == 'POST' && req.url == '/newgame') {
         number = getRandomInt();
         answers = [];
-        console.log(number);
-        res.writeHead(200, {'Content-Type': 'text/html','Content-Length': data.length});
-        res.write(data);
+        res.writeHead(200, {'Content-Type': 'application/json'});
+        res.write(JSON.stringify({ success: true, error: null, data: { result: '', answers: answers }}));
         res.end();
     } else if (req.method == 'POST' && req.url == '/game') {
         let data = '';
@@ -41,20 +37,20 @@ const requestListener = function (req, res) {
             data += chunk;
         });
         req.on('end', () => {
-            console.log(data);
             let answer = +JSON.parse(data).answer;
             answers.push(answer);
             res.writeHead(200, {'Content-Type': 'application/json'});
             let responseAnswer;
-            console.log(answer, '---', number);
             if (answer == number) {
                 responseAnswer = 'win';
+                number = getRandomInt();
+                answers = [];
             } else if (answer < number) {
-                responseAnswer = 'less';
-            } else if (answer > number) {
                 responseAnswer = 'more';
+            } else if (answer > number) {
+                responseAnswer = 'less';
             }
-            res.write(JSON.stringify({ success: true, error: null, data: responseAnswer }));
+            res.write(JSON.stringify({ success: true, error: null, data: { result: responseAnswer, answers: answers }}));
             res.end();
         });
     }
